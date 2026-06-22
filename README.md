@@ -27,6 +27,12 @@ Servicios locales:
 - Healthcheck backend: `http://localhost:8000/health`
 - MySQL: `localhost:3306`
 
+Nota de despliegue validado en `fasa_195`: el backend puede publicarse con
+`BACKEND_PORT=18080` si el puerto `8000` ya esta ocupado. En ese caso,
+`VITE_API_BASE_URL` debe apuntar a `http://localhost:18080` para que el
+frontend consulte el backend correcto. Estos valores viven en el `.env` local
+del servidor y no se versionan.
+
 ### Validaciones basicas
 
 Backend:
