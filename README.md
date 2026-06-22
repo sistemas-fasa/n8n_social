@@ -70,6 +70,13 @@ En Docker:
 docker compose exec backend alembic upgrade head
 ```
 
+Para deploys, usar el runbook repetible de migraciones en
+[`docs/deploy-migrations.md`](docs/deploy-migrations.md). El script operativo es:
+
+```bash
+./scripts/run-migrations.sh
+```
+
 Por decision de arquitectura, el dashboard no publica directo contra Meta Graph API. n8n publica y mide; los secretos Meta viven en n8n.
 
 El objetivo no es solo subir fotos a Instagram o Facebook. La idea es construir un centro operativo y gerencial para redes sociales: cargar piezas, programarlas, publicarlas por n8n/Meta Graph API, guardar los IDs devueltos por Meta y medir rendimiento por canal, producto, campania y periodo.
