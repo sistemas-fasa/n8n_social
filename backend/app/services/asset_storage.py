@@ -15,13 +15,15 @@ ALLOWED_ASSET_MIME_TYPES = {
 class StoredAsset:
     file_name: str
     public_url: str
+    verification_url: str
     size_bytes: int
 
 
 class LocalAssetStorage:
-    def __init__(self, storage_path: Path, public_base_url: str) -> None:
+    def __init__(self, storage_path: Path, public_base_url: str, public_verify_base_url: str | None = None) -> None:
         self.storage_path = storage_path
         self.public_base_url = public_base_url.rstrip("/")
+        self.public_verify_base_url = (public_verify_base_url or public_base_url).rstrip("/")
 
     def save(self, original_file_name: str, mime_type: str, content: bytes) -> StoredAsset:
         extension = self._extension_for(original_file_name, mime_type)
@@ -32,6 +34,7 @@ class LocalAssetStorage:
         return StoredAsset(
             file_name=file_name,
             public_url=f"{self.public_base_url}/{file_name}",
+            verification_url=f"{self.public_verify_base_url}/{file_name}",
             size_bytes=len(content),
         )
 

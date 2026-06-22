@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     asset_storage_backend: str = "local"
     asset_storage_path: str = "/app/storage/assets"
     asset_public_base_url: str = "http://localhost:8000/public/assets"
+    asset_public_verify_base_url: str | None = None
     asset_max_size_mb: int = 50
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
