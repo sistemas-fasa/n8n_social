@@ -36,9 +36,10 @@ The script performs these steps:
 1. Validates `docker compose config`.
 2. Prints Alembic heads.
 3. Prints the currently deployed revision if the database is already stamped.
-4. Runs `alembic upgrade head` inside the backend container.
-5. Prints the revision after upgrade.
-6. Checks backend `/health` when `curl` is available.
+4. Skips `alembic upgrade head` when the current revision already reports `(head)`.
+5. Runs `alembic upgrade head` inside the backend container only when needed.
+6. Prints the revision after upgrade when migrations were applied.
+7. Checks backend `/health` when `curl` is available.
 
 ## Manual equivalent
 
@@ -49,6 +50,7 @@ cd /opt/fasa-social-dashboard
 docker compose config >/dev/null
 docker compose exec -T backend alembic heads
 docker compose exec -T backend alembic current || true
+# Run only when the current revision is not already marked as (head).
 docker compose exec -T backend alembic upgrade head
 docker compose exec -T backend alembic current
 curl --fail --silent --show-error http://localhost:${BACKEND_PORT:-8000}/health >/dev/null
