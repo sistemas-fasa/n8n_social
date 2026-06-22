@@ -31,11 +31,14 @@ services:
       ASSET_STORAGE_BACKEND: ${ASSET_STORAGE_BACKEND:-local}
       ASSET_STORAGE_PATH: ${ASSET_STORAGE_PATH:-/app/storage/assets}
       ASSET_PUBLIC_BASE_URL: ${ASSET_PUBLIC_BASE_URL:-http://localhost:8000/public/assets}
+      ASSET_PUBLIC_VERIFY_BASE_URL: ${ASSET_PUBLIC_VERIFY_BASE_URL:-}
       ASSET_MAX_SIZE_MB: ${ASSET_MAX_SIZE_MB:-50}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
       - assets_data:/app/storage/assets
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       mysql:
         condition: service_healthy

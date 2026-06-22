@@ -52,7 +52,16 @@ def get_storage(request: Request) -> LocalAssetStorage:
     else:
         public_base_url = get_settings().asset_public_base_url
 
-    return LocalAssetStorage(storage_path=storage_path, public_base_url=public_base_url)
+    if hasattr(request.app.state, "asset_public_verify_base_url"):
+        public_verify_base_url = str(request.app.state.asset_public_verify_base_url)
+    else:
+        public_verify_base_url = get_settings().asset_public_verify_base_url
+
+    return LocalAssetStorage(
+        storage_path=storage_path,
+        public_base_url=public_base_url,
+        public_verify_base_url=public_verify_base_url,
+    )
 
 
 def get_url_verifier(request: Request):
@@ -87,7 +96,7 @@ def upload_asset(
             detail="Uploaded asset could not be stored",
         ) from exc
 
-    if not url_verifier(stored.public_url):
+    if not url_verifier(stored.verification_url):
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail="Uploaded asset public URL could not be verified",

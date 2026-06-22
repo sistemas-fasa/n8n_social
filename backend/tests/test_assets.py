@@ -45,6 +45,7 @@ def asset_client(tmp_path: Path) -> Generator[tuple[TestClient, Session], None, 
             "asset_storage_backend",
             "asset_storage_path",
             "asset_public_base_url",
+            "asset_public_verify_base_url",
             "asset_max_size_bytes",
             "asset_public_url_verifier",
         ):
@@ -85,6 +86,26 @@ def test_upload_image_creates_social_asset_record(asset_client: tuple[TestClient
     assert asset.public_url == response.json()["public_url"]
     assert asset.mime_type == "image/png"
     assert asset.size_bytes == len(b"png bytes")
+
+
+def test_upload_can_verify_with_internal_url_while_returning_public_url(
+    asset_client: tuple[TestClient, Session],
+) -> None:
+    client, _ = asset_client
+    verified_urls: list[str] = []
+    app.state.asset_public_base_url = "http://public.example.test/assets"
+    app.state.asset_public_verify_base_url = "http://backend:8000/public/assets"
+    app.state.asset_public_url_verifier = lambda public_url: verified_urls.append(public_url) or True
+
+    response = client.post(
+        "/assets/upload",
+        files={"file": ("pieza.png", b"png bytes", "image/png")},
+    )
+
+    assert response.status_code == 201
+    payload = response.json()
+    assert payload["public_url"].startswith("http://public.example.test/assets/")
+    assert verified_urls == [payload["public_url"].replace("http://public.example.test/assets", "http://backend:8000/public/assets")]
 
 
 def test_upload_rejects_unsupported_mime_type(asset_client: tuple[TestClient, Session]) -> None:
