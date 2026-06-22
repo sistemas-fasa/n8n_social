@@ -2,6 +2,57 @@
 
 Dashboard y backend para planificar, aprobar, publicar y medir contenido social de Ferreteria Avenida.
 
+## Desarrollo local
+
+### Requisitos
+
+- Docker y Docker Compose.
+- Python 3.12+ para validaciones locales del backend.
+- Node.js 22+ para validaciones locales del frontend.
+
+### Configuracion
+
+1. Copiar `.env.example` a `.env`.
+2. Ajustar valores locales si hace falta. No usar secretos reales en este repositorio.
+3. Levantar el stack:
+
+```bash
+docker compose up --build
+```
+
+Servicios locales:
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000`
+- Healthcheck backend: `http://localhost:8000/health`
+- MySQL: `localhost:3306`
+
+### Validaciones basicas
+
+Backend:
+
+```bash
+cd backend
+python -m pytest
+python -c "from app.main import app; print(app.title)"
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+Docker:
+
+```bash
+docker compose config
+```
+
+Por decision de arquitectura, el dashboard no publica directo contra Meta Graph API. n8n publica y mide; los secretos Meta viven en n8n.
+
 El objetivo no es solo subir fotos a Instagram o Facebook. La idea es construir un centro operativo y gerencial para redes sociales: cargar piezas, programarlas, publicarlas por n8n/Meta Graph API, guardar los IDs devueltos por Meta y medir rendimiento por canal, producto, campania y periodo.
 
 ## Estado actual
