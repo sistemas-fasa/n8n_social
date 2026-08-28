@@ -5,12 +5,12 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-COPY requirements.txt .
+COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY alembic.ini .
-COPY alembic ./alembic
-COPY app ./app
+COPY backend/alembic.ini /app/alembic.ini
+COPY backend/alembic /app/alembic
+COPY backend/app /app/app
 COPY docker/backend-entrypoint.sh /usr/local/bin/fasa-social-backend-entrypoint.sh
 RUN chmod 0755 /usr/local/bin/fasa-social-backend-entrypoint.sh
 
