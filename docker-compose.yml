@@ -5,6 +5,7 @@ services:
       dockerfile: docker/mysql/Dockerfile
     image: fasa-social-dashboard-mysql:latest
     restart: unless-stopped
+    command: ["mysqld"]
     volumes:
       - /srv/fasa-data/data/fasa-social/mysql:/var/lib/mysql
       - /srv/fasa-data/data/fasa-social/fasa-social.env:/run/secrets/fasa-social.env:ro
